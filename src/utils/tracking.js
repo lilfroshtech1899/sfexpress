@@ -1,0 +1,248 @@
+/**
+ * Reusable, date-based shipment status engine.
+ *
+ * All functions are pure and take an injectable `now` date so they can be
+ * unit-tested and reused for any shipment that follows the same schedule
+ * shape (shippingDate, expectedDeliveryDate + STAGES).
+ */
+
+import { STAGES } from '../data/shipment.js'
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000
+
+/** Normalise any date value to local midnight. */
+export function startOfDay(value) {
+  const d = value instanceof Date ? new Date(value) : new Date(value)
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate())
+}
+
+/** Parse a 'YYYY-MM-DD' string into a local Date at midnight. */
+export function parseDay(isoDate) {
+  const [y, m, d] = String(isoDate).split('-').map(Number)
+  return new Date(y, (m || 1) - 1, d || 1)
+}
+
+export function addDays(date, days) {
+  const d = new Date(date)
+  d.setDate(d.getDate() + days)
+  return d
+}
+
+/** Combine a day with a 'HH:MM' string into a Date. */
+export function atTime(day, time) {
+  const [h, min] = String(time).split(':').map(Number)
+  const d = new Date(day)
+  d.setHours(h || 0, min || 0, 0, 0)
+  return d
+}
+
+/** Whole-day difference between two dates (b - a). */
+export function dayDiff(a, b) {
+  return Math.round((startOfDay(b) - startOfDay(a)) / MS_PER_DAY)
+}
+
+export function formatDate(value) {
+  if (!value) return '—'
+  const d = value instanceof Date ? value : new Date(value)
+  return d.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
+}
+
+export function formatShortDate(value) {
+  if (!value) return '—'
+  const d = value instanceof Date ? value : new Date(value)
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+}
+
+export function formatTime(value) {
+  if (!value) return ''
+  const d = value instanceof Date ? value : new Date(value)
+  return d.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  })
+}
+
+export function formatDateTime(value) {
+  if (!value) return '—'
+  return `${formatDate(value)} · ${formatTime(value)}`
+}
+
+/* ------------------------------------------------------------------ */
+/* Status catalogue                                                    */
+/* ------------------------------------------------------------------ */
+
+const STATUS_META = {
+  scheduled: {
+    label: 'Shipment Scheduled',
+    tone: 'info',
+    location: 'Seoul, South Korea',
+    message:
+      'Shipment information has been received. The package is scheduled for dispatch on the shipping date.'
+  },
+  created: {
+    label: 'Shipment Created',
+    tone: 'current',
+    location: 'Seoul, South Korea',
+    message: 'Shipment information has been registered in the SF Express Korea system.'
+  },
+  processing: {
+    label: 'Processing',
+    tone: 'current',
+    location: 'Seoul, South Korea',
+    message: 'The package is being prepared and processed at the SF Express Korea origin facility.'
+  },
+  dispatched: {
+    label: 'Dispatched',
+    tone: 'current',
+    location: 'Incheon, South Korea',
+    message: 'The shipment has left the SF Express Korea origin facility.'
+  },
+  transit: {
+    label: 'In Transit',
+    tone: 'current',
+    location: 'In transit · South Korea → Finland',
+    message: 'The shipment is in transit from South Korea toward Finland.'
+  },
+  arrived: {
+    label: 'Arrived in Destination Country',
+    tone: 'current',
+    location: 'Finland',
+    message: 'The shipment has arrived in Finland and is handled by the destination delivery network.'
+  },
+  outForDelivery: {
+    label: 'Out for Delivery',
+    tone: 'current',
+    location: 'Out for delivery · Finland',
+    message: 'The shipment is with the local delivery service and is out for delivery in Finland.'
+  },
+  delivered: {
+    label: 'Delivered',
+    tone: 'done',
+    location: 'Finland',
+    message: 'Your shipment has been successfully delivered to the recipient.'
+  }
+}
+
+/**
+ * Determine the active stage from the current date by comparing against each
+ * stage's scheduled date. Stages are not necessarily one-per-day (some share
+ * a day, some skip days), so the active stage is the latest milestone whose
+ * date has been reached.
+ *
+ * Delivered is deliberately excluded: a shipment is never auto-marked
+ * delivered by date. It stays "Out for Delivery" (as of 14 Oct 2026) until
+ * it is explicitly confirmed.
+ */
+function resolveStatus(stageDates, today) {
+  let currentIndex = -1
+  STAGES.forEach((stage, index) => {
+    if (stage.key === 'delivered') return
+    if (dayDiff(stageDates[index], today) >= 0) currentIndex = index
+  })
+  const code = currentIndex === -1 ? 'scheduled' : STAGES[currentIndex].key
+  return { code, currentIndex, delivered: false }
+}
+
+/**
+ * Compute the full, date-aware tracking view for a shipment.
+ *
+ * @param {object} shipment - shipment record (see data/shipment.js)
+ * @param {Date|string} [now] - reference "current" date (defaults to real now)
+ * @returns {object} progress model consumed by the UI
+ */
+export function getTrackingView(shipment, now = new Date()) {
+  const shipDay = parseDay(shipment.shippingDate)
+  const deliveryDay = parseDay(shipment.expectedDeliveryDate)
+  const today = startOfDay(now)
+
+  const dayIndex = dayDiff(shipDay, today)
+
+  const stageDates = STAGES.map((stage) => addDays(shipDay, stage.dayOffset))
+
+  const { code, currentIndex, delivered } = resolveStatus(stageDates, today)
+  const meta = STATUS_META[code] || STATUS_META.scheduled
+
+  const stages = STAGES.map((stage, index) => {
+    let state = 'pending'
+    if (delivered) {
+      state = 'completed'
+    } else if (currentIndex === -1) {
+      state = 'pending'
+    } else if (index < currentIndex) {
+      state = 'completed'
+    } else if (index === currentIndex) {
+      state = 'current'
+    }
+
+    const scheduledMoment = atTime(stageDates[index], stage.time)
+    const isReached = state === 'completed' || state === 'current'
+
+    return {
+      ...stage,
+      state,
+      isReached,
+      date: stageDates[index],
+      scheduledMoment,
+      timestampLabel: isReached ? formatDateTime(scheduledMoment) : formatDate(stageDates[index]),
+      timestampKind: isReached ? 'recorded' : 'estimated'
+    }
+  })
+
+  // Last recorded update: prefer the current stage, else the last completed one.
+  const recorded = stages.filter((s) => s.isReached)
+  const lastStage = recorded.length ? recorded[recorded.length - 1] : null
+  const lastUpdate = lastStage ? lastStage.scheduledMoment : null
+
+  const isDelayed = false
+  const needsConfirmation = false
+
+  const deliveryEstimateLabel = delivered
+    ? `Delivered on ${formatDate(deliveryDay)}`
+    : formatDate(deliveryDay)
+
+  const completedCount = delivered
+    ? STAGES.length
+    : currentIndex === -1
+      ? 0
+      : currentIndex
+  const progressPercent = Math.round((completedCount / (STAGES.length - 1)) * 100)
+
+  return {
+    schedule: {
+      shippingDate: shipDay,
+      expectedDeliveryDate: deliveryDay
+    },
+    code,
+    statusLabel: meta.label,
+    tone: meta.tone,
+    message: meta.message,
+    location: meta.location,
+    currentIndex,
+    completedCount,
+    delivered,
+    isDelayed,
+    needsConfirmation,
+    deliveredByDate: delivered,
+    dayIndex,
+    stages,
+    lastUpdate,
+    lastUpdateLabel: lastUpdate ? formatDateTime(lastUpdate) : 'Awaiting first shipment scan',
+    deliveryEstimateLabel,
+    progressPercent: Math.max(0, Math.min(100, progressPercent))
+  }
+}
+
+/**
+ * Simulated next-milestone hint for the summary card.
+ */
+export function getNextMilestone(view) {
+  if (view.delivered) return null
+  if (view.currentIndex === -1) return view.stages[0]
+  const next = view.stages[view.currentIndex + 1]
+  return next || null
+}
