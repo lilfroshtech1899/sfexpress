@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ClockIcon } from './Icons.jsx'
+import { useI18n } from '../i18n/LanguageContext.jsx'
 
 /**
  * Optional demonstration control. The live status always uses the real
@@ -8,6 +9,7 @@ import { ClockIcon } from './Icons.jsx'
  */
 export default function DemoControls({ value, onChange, onReset, isLive, liveLabel }) {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
 
   return (
     <div className="demo-controls">
@@ -18,7 +20,7 @@ export default function DemoControls({ value, onChange, onReset, isLive, liveLab
         onClick={() => setOpen((v) => !v)}
       >
         <ClockIcon width="16" height="16" />
-        {isLive ? `Live status · ${liveLabel}` : `Preview: ${liveLabel}`}
+        {isLive ? t('demo.live', { label: liveLabel }) : t('demo.preview', { label: liveLabel })}
         <span className="demo-controls__chevron" aria-hidden="true">
           {open ? '▲' : '▼'}
         </span>
@@ -26,12 +28,9 @@ export default function DemoControls({ value, onChange, onReset, isLive, liveLab
 
       {open && (
         <div className="demo-controls__panel">
-          <p className="demo-controls__hint">
-            Status is derived from the real current date. Preview another date to see how the
-            schedule resolves — this does not alter the shipment.
-          </p>
+          <p className="demo-controls__hint">{t('demo.hint')}</p>
           <div className="demo-controls__row">
-            <label htmlFor="preview-date">Preview date</label>
+            <label htmlFor="preview-date">{t('demo.date')}</label>
             <input
               id="preview-date"
               type="date"
@@ -39,7 +38,7 @@ export default function DemoControls({ value, onChange, onReset, isLive, liveLab
               onChange={(e) => onChange(e.target.value)}
             />
             <button type="button" className="btn btn--ghost btn--sm" onClick={onReset}>
-              Use today
+              {t('demo.today')}
             </button>
           </div>
         </div>

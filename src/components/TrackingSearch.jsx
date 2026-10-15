@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { SearchIcon } from './Icons.jsx'
 import { normalizeTrackingNumber } from '../utils/lookup.js'
+import { useI18n } from '../i18n/LanguageContext.jsx'
 
 /**
  * Controlled tracking-number search form.
@@ -8,6 +9,7 @@ import { normalizeTrackingNumber } from '../utils/lookup.js'
  */
 export default function TrackingSearch({ initialValue = '', onSubmit, error, loading }) {
   const [value, setValue] = useState(initialValue)
+  const { t } = useI18n()
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -25,7 +27,7 @@ export default function TrackingSearch({ initialValue = '', onSubmit, error, loa
           <SearchIcon width="20" height="20" />
         </span>
         <label className="sr-only" htmlFor="tracking-input">
-          Tracking number
+          {t('search.label')}
         </label>
         <input
           id="tracking-input"
@@ -35,7 +37,7 @@ export default function TrackingSearch({ initialValue = '', onSubmit, error, loa
           inputMode="text"
           autoComplete="off"
           spellCheck="false"
-          placeholder="Enter your tracking number"
+          placeholder={t('search.placeholder')}
           value={value}
           onChange={handleChange}
           aria-invalid={Boolean(error)}
@@ -43,7 +45,7 @@ export default function TrackingSearch({ initialValue = '', onSubmit, error, loa
         />
         <button className="btn btn--primary track-search__button" type="submit" disabled={loading}>
           <SearchIcon width="18" height="18" />
-          <span>{loading ? 'Tracking…' : 'Track Shipment'}</span>
+          <span>{loading ? t('search.tracking') : t('cta.track')}</span>
         </button>
       </div>
 

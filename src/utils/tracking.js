@@ -10,6 +10,13 @@ import { STAGES } from '../data/shipment.js'
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
+/** Locale used by the date/time formatters. Updated by the language provider. */
+let dateLocale = 'en-GB'
+
+export function setDateLocale(locale) {
+  if (locale) dateLocale = locale
+}
+
 /** Normalise any date value to local midnight. */
 export function startOfDay(value) {
   const d = value instanceof Date ? new Date(value) : new Date(value)
@@ -44,7 +51,7 @@ export function dayDiff(a, b) {
 export function formatDate(value) {
   if (!value) return '—'
   const d = value instanceof Date ? value : new Date(value)
-  return d.toLocaleDateString('en-GB', {
+  return d.toLocaleDateString(dateLocale, {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
@@ -54,13 +61,13 @@ export function formatDate(value) {
 export function formatShortDate(value) {
   if (!value) return '—'
   const d = value instanceof Date ? value : new Date(value)
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+  return d.toLocaleDateString(dateLocale, { day: 'numeric', month: 'short' })
 }
 
 export function formatTime(value) {
   if (!value) return ''
   const d = value instanceof Date ? value : new Date(value)
-  return d.toLocaleTimeString('en-GB', {
+  return d.toLocaleTimeString(dateLocale, {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
@@ -76,56 +83,20 @@ export function formatDateTime(value) {
 /* Status catalogue                                                    */
 /* ------------------------------------------------------------------ */
 
-const STATUS_META = {
-  scheduled: {
-    label: 'Shipment Scheduled',
-    tone: 'info',
-    location: 'Seoul, South Korea',
-    message:
-      'Shipment information has been received. The package is scheduled for dispatch on the shipping date.'
-  },
-  created: {
-    label: 'Shipment Created',
-    tone: 'current',
-    location: 'Seoul, South Korea',
-    message: 'Shipment information has been registered in the SF Express Korea system.'
-  },
-  processing: {
-    label: 'Processing',
-    tone: 'current',
-    location: 'Seoul, South Korea',
-    message: 'The package is being prepared and processed at the SF Express Korea origin facility.'
-  },
-  dispatched: {
-    label: 'Dispatched',
-    tone: 'current',
-    location: 'Incheon, South Korea',
-    message: 'The shipment has left the SF Express Korea origin facility.'
-  },
-  transit: {
-    label: 'In Transit',
-    tone: 'current',
-    location: 'In transit · South Korea → Finland',
-    message: 'The shipment is in transit from South Korea toward Finland.'
-  },
-  arrived: {
-    label: 'Arrived in Destination Country',
-    tone: 'current',
-    location: 'Finland',
-    message: 'The shipment has arrived in Finland and is handled by the destination delivery network.'
-  },
-  outForDelivery: {
-    label: 'Out for Delivery',
-    tone: 'current',
-    location: 'Out for delivery · Finland',
-    message: 'The shipment is with the local delivery service and is out for delivery in Finland.'
-  },
-  delivered: {
-    label: 'Delivered',
-    tone: 'done',
-    location: 'Finland',
-    message: 'Your shipment has been successfully delivered to the recipient.'
-  }
+/**
+ * Status catalogue — tone per status code. Human-readable labels, messages
+ * and locations are resolved through the active translation dictionary using
+ * `status.<code>.label`, `status.<code>.message` and `status.<code>.location`.
+ */
+const STATUS_TONE = {
+  scheduled: 'info',
+  created: 'current',
+  processing: 'current',
+  dispatched: 'current',
+  transit: 'current',
+  arrived: 'current',
+  outForDelivery: 'current',
+  delivered: 'done'
 }
 
 /**
@@ -153,9 +124,10 @@ function resolveStatus(stageDates, today) {
  *
  * @param {object} shipment - shipment record (see data/shipment.js)
  * @param {Date|string} [now] - reference "current" date (defaults to real now)
+ * @param {function} [t] - translation helper (key, vars) => string
  * @returns {object} progress model consumed by the UI
  */
-export function getTrackingView(shipment, now = new Date()) {
+export function getTrackingView(shipment, now = new Date(), t = (key) => key) {
   const shipDay = parseDay(shipment.shippingDate)
   const deliveryDay = parseDay(shipment.expectedDeliveryDate)
   const today = startOfDay(now)
@@ -165,7 +137,7 @@ export function getTrackingView(shipment, now = new Date()) {
   const stageDates = STAGES.map((stage) => addDays(shipDay, stage.dayOffset))
 
   const { code, currentIndex, delivered } = resolveStatus(stageDates, today)
-  const meta = STATUS_META[code] || STATUS_META.scheduled
+  const tone = STATUS_TONE[code] || STATUS_TONE.scheduled
 
   const stages = STAGES.map((stage, index) => {
     let state = 'pending'
@@ -184,6 +156,8 @@ export function getTrackingView(shipment, now = new Date()) {
 
     return {
       ...stage,
+      title: t(`stage.${stage.key}.title`),
+      description: t(`stage.${stage.key}.desc`),
       state,
       isReached,
       date: stageDates[index],
@@ -202,7 +176,7 @@ export function getTrackingView(shipment, now = new Date()) {
   const needsConfirmation = false
 
   const deliveryEstimateLabel = delivered
-    ? `Delivered on ${formatDate(deliveryDay)}`
+    ? t('deliveredOn', { date: formatDate(deliveryDay) })
     : formatDate(deliveryDay)
 
   const completedCount = delivered
@@ -218,10 +192,10 @@ export function getTrackingView(shipment, now = new Date()) {
       expectedDeliveryDate: deliveryDay
     },
     code,
-    statusLabel: meta.label,
-    tone: meta.tone,
-    message: meta.message,
-    location: meta.location,
+    statusLabel: t(`status.${code}.label`),
+    tone,
+    message: t(`status.${code}.message`),
+    location: t(`status.${code}.location`),
     currentIndex,
     completedCount,
     delivered,
@@ -231,7 +205,7 @@ export function getTrackingView(shipment, now = new Date()) {
     dayIndex,
     stages,
     lastUpdate,
-    lastUpdateLabel: lastUpdate ? formatDateTime(lastUpdate) : 'Awaiting first shipment scan',
+    lastUpdateLabel: lastUpdate ? formatDateTime(lastUpdate) : t('awaiting'),
     deliveryEstimateLabel,
     progressPercent: Math.max(0, Math.min(100, progressPercent))
   }

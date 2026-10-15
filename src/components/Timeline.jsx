@@ -1,9 +1,10 @@
 import { STAGE_ICONS, CheckIcon, ClockIcon } from './Icons.jsx'
+import { useI18n } from '../i18n/LanguageContext.jsx'
 
-const STATE_LABEL = {
-  completed: 'Completed',
-  current: 'Current stage',
-  pending: 'Upcoming'
+const STATE_LABEL_KEY = {
+  completed: 'timeline.completed',
+  current: 'timeline.current',
+  pending: 'timeline.upcoming'
 }
 
 /**
@@ -11,6 +12,8 @@ const STATE_LABEL = {
  * timestamps, state labels and explanatory messages.
  */
 export default function Timeline({ stages }) {
+  const { t, trPlace } = useI18n()
+
   return (
     <ol className="timeline">
       {stages.map((stage) => {
@@ -31,7 +34,7 @@ export default function Timeline({ stages }) {
               <div className="timeline__head">
                 <h4 className="timeline__title">{stage.title}</h4>
                 <span className={`timeline__state timeline__state--${stage.state}`}>
-                  {STATE_LABEL[stage.state]}
+                  {t(STATE_LABEL_KEY[stage.state])}
                 </span>
               </div>
 
@@ -39,13 +42,14 @@ export default function Timeline({ stages }) {
 
               <div className="timeline__meta">
                 <span className="timeline__time">
-                  {stage.timestampKind === 'recorded' ? 'Recorded' : 'Estimated'}: {stage.timestampLabel}
+                  {stage.timestampKind === 'recorded' ? t('timeline.recorded') : t('timeline.estimated')}:{' '}
+                  {stage.timestampLabel}
                 </span>
-                {stage.location && <span className="timeline__location">{stage.location}</span>}
+                {stage.location && <span className="timeline__location">{trPlace(stage.location)}</span>}
               </div>
 
               {stage.timestampKind === 'estimated' && (
-                <span className="timeline__tag">Scheduled milestone</span>
+                <span className="timeline__tag">{t('timeline.scheduled')}</span>
               )}
             </div>
           </li>

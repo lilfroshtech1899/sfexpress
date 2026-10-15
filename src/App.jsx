@@ -13,6 +13,7 @@ import Footer from './components/Footer.jsx'
 
 import { lookupTracking } from './utils/lookup.js'
 import { getTrackingView, formatDate } from './utils/tracking.js'
+import { useI18n } from './i18n/LanguageContext.jsx'
 
 function toDateInputValue(date) {
   const d = new Date(date)
@@ -21,6 +22,7 @@ function toDateInputValue(date) {
 }
 
 export default function App() {
+  const { t } = useI18n()
   const [activeShipment, setActiveShipment] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -40,38 +42,41 @@ export default function App() {
   const referenceDate = liveMode ? now : new Date(`${previewDate}T12:00:00`)
 
   const view = useMemo(
-    () => (activeShipment ? getTrackingView(activeShipment, referenceDate) : null),
-    [activeShipment, referenceDate]
+    () => (activeShipment ? getTrackingView(activeShipment, referenceDate, t) : null),
+    [activeShipment, referenceDate, t]
   )
 
-  const handleTrack = useCallback((value) => {
-    setLoading(true)
-    setError('')
+  const handleTrack = useCallback(
+    (value) => {
+      setLoading(true)
+      setError('')
 
-    // Small simulated round-trip so the lookup feels realistic.
-    window.setTimeout(() => {
-      const result = lookupTracking(value)
+      // Small simulated round-trip so the lookup feels realistic.
+      window.setTimeout(() => {
+        const result = lookupTracking(value, t)
 
-      if (result.ok) {
-        setActiveShipment(result.shipment)
-        setLiveMode(true)
-        setPreviewDate(toDateInputValue(new Date()))
-        setError('')
-        window.requestAnimationFrame(() => {
-          resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        })
-      } else {
-        setActiveShipment(null)
-        setError(result.reason)
-      }
-      setLoading(false)
-    }, 400)
-  }, [])
+        if (result.ok) {
+          setActiveShipment(result.shipment)
+          setLiveMode(true)
+          setPreviewDate(toDateInputValue(new Date()))
+          setError('')
+          window.requestAnimationFrame(() => {
+            resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          })
+        } else {
+          setActiveShipment(null)
+          setError(result.reason)
+        }
+        setLoading(false)
+      }, 400)
+    },
+    [t]
+  )
 
   return (
     <div className="app" id="top">
       <a className="skip-link" href="#results">
-        Skip to tracking results
+        {t('skip')}
       </a>
 
       <Header />
@@ -83,8 +88,8 @@ export default function App() {
           <section className="results container" id="results" ref={resultsRef} aria-live="polite">
             <div className="results__head">
               <div>
-                <span className="results__eyebrow">Tracking result</span>
-                <h2 className="results__title">Shipment overview</h2>
+                <span className="results__eyebrow">{t('results.eyebrow')}</span>
+                <h2 className="results__title">{t('results.title')}</h2>
               </div>
               <DemoControls
                 value={previewDate}
@@ -106,17 +111,17 @@ export default function App() {
             <section className="card stepper-card" aria-labelledby="progress-heading">
               <header className="card__head">
                 <h3 className="card__title" id="progress-heading">
-                  Milestone progress
+                  {t('results.progress')}
                 </h3>
-                <span className="chip chip--ghost">{view.stages.length} stages</span>
+                <span className="chip chip--ghost">{t('results.stages', { n: view.stages.length })}</span>
               </header>
 
               <ProgressStepper stages={view.stages} />
 
               <div className="timeline-card__legend">
-                <span className="legend legend--completed">Completed</span>
-                <span className="legend legend--current">Current</span>
-                <span className="legend legend--pending">Upcoming</span>
+                <span className="legend legend--completed">{t('legend.completed')}</span>
+                <span className="legend legend--current">{t('legend.current')}</span>
+                <span className="legend legend--pending">{t('legend.pending')}</span>
               </div>
             </section>
 
@@ -130,7 +135,7 @@ export default function App() {
                 <section className="card timeline-card" aria-labelledby="timeline-heading">
                   <header className="card__head">
                     <h3 className="card__title" id="timeline-heading">
-                      Tracking timeline
+                      {t('results.timeline')}
                     </h3>
                     <StatusBadge tone={view.tone} label={view.statusLabel} size="sm" />
                   </header>
@@ -146,12 +151,9 @@ export default function App() {
           <section className="results container results--empty" id="results" ref={resultsRef}>
             <div className="empty-state" role="status">
               <h2 className="empty-state__title">
-                {error ? 'No shipment found' : 'Track your shipment'}
+                {error ? t('empty.notFound') : t('empty.title')}
               </h2>
-              <p className="empty-state__text">
-                {error ||
-                  'Enter your tracking number above to view shipment details.'}
-              </p>
+              <p className="empty-state__text">{error || t('empty.text')}</p>
             </div>
           </section>
         )}

@@ -1,21 +1,21 @@
 import TrackingSearch from './TrackingSearch.jsx'
+import { useI18n } from '../i18n/LanguageContext.jsx'
 
 export default function Hero({ onTrack, error, loading, initialValue }) {
+  const { t } = useI18n()
+
   return (
     <section className="hero" id="track">
       <div className="hero__bg" aria-hidden="true" />
       <div className="container hero__inner">
         <div className="hero__copy">
-          <span className="hero__eyebrow">SF Express Korea · International Express</span>
-          <h1 className="hero__title">Track your shipment in real time</h1>
-          <p className="hero__subtitle">
-            Enter your tracking number to follow your parcel's journey from South Korea to its
-            destination, with clear milestone updates at every step.
-          </p>
+          <span className="hero__eyebrow">{t('hero.eyebrow')}</span>
+          <h1 className="hero__title">{t('hero.title')}</h1>
+          <p className="hero__subtitle">{t('hero.subtitle')}</p>
         </div>
 
         <div className="hero__search-card">
-          <p className="hero__search-title">Track &amp; Trace</p>
+          <p className="hero__search-title">{t('hero.searchTitle')}</p>
           <TrackingSearch
             initialValue={initialValue}
             onSubmit={onTrack}
@@ -26,16 +26,16 @@ export default function Hero({ onTrack, error, loading, initialValue }) {
 
         <ul className="hero__features">
           <li>
-            <strong>Express Delivery</strong>
-            <span>Priority international handling</span>
+            <strong>{t('hero.f1.title')}</strong>
+            <span>{t('hero.f1.text')}</span>
           </li>
           <li>
-            <strong>End-to-end visibility</strong>
-            <span>Milestone status at every stage</span>
+            <strong>{t('hero.f2.title')}</strong>
+            <span>{t('hero.f2.text')}</span>
           </li>
           <li>
-            <strong>Secure &amp; reliable</strong>
-            <span>Tracked from origin to destination</span>
+            <strong>{t('hero.f3.title')}</strong>
+            <span>{t('hero.f3.text')}</span>
           </li>
         </ul>
       </div>

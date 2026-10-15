@@ -212,53 +212,21 @@ ol {
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
 }
 
-.logo__mark {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--red), #ff3b4e);
-  display: grid;
-  place-items: center;
-  box-shadow: 0 8px 18px -8px rgba(230, 0, 18, 0.85);
+.logo__image {
+  height: 46px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  display: block;
 }
 
-.logo__mark-text {
-  color: #fff;
-  font-weight: 800;
-  font-size: 17px;
-  letter-spacing: 0.5px;
-}
-
-.logo__words {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.05;
-}
-
-.logo__name {
-  font-weight: 800;
-  font-size: 19px;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.logo__region {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.logo--light .logo__name {
-  color: #fff;
-}
-
-.logo--light .logo__region {
-  color: rgba(255, 255, 255, 0.72);
+.logo--light .logo__image {
+  background: #fff;
+  border-radius: 10px;
+  padding: 4px;
+  box-sizing: content-box;
 }
 
 /* ==========================================================================
@@ -308,6 +276,49 @@ ol {
 
 .topbar__link:hover {
   color: #fff;
+}
+
+.topbar__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar__select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 5px 24px 5px 10px;
+  border-radius: 8px;
+  max-width: 220px;
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.topbar__select:hover {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+
+.topbar__select:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+
+.topbar__select option {
+  color: #1c1c1c;
+}
+
+.topbar__select--lang {
+  max-width: 140px;
 }
 
 .header__inner {
@@ -1696,8 +1707,21 @@ ol {
 }
 
 @media (max-width: 560px) {
-  .topbar__contacts {
+  .topbar__inner {
+    justify-content: center;
+  }
+
+  .topbar__tag,
+  .topbar__contacts .topbar__link {
     display: none;
+  }
+
+  .topbar__select {
+    max-width: 150px;
+  }
+
+  .topbar__select--lang {
+    max-width: 110px;
   }
 
   .card {

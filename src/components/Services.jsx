@@ -1,51 +1,35 @@
 import { PlaneIcon, TruckIcon, PackageIcon, GlobeIcon } from './Icons.jsx'
+import { useI18n } from '../i18n/LanguageContext.jsx'
 
 const SERVICES = [
-  {
-    icon: PlaneIcon,
-    title: 'International Express',
-    text: 'Time-definite cross-border delivery with priority customs handling.'
-  },
-  {
-    icon: TruckIcon,
-    title: 'Express Delivery',
-    text: 'Fast, tracked door-to-door delivery for time-critical shipments.'
-  },
-  {
-    icon: PackageIcon,
-    title: 'E-commerce Logistics',
-    text: 'Scalable fulfilment and last-mile delivery for online retailers.'
-  },
-  {
-    icon: GlobeIcon,
-    title: 'Global Network',
-    text: 'Connected coverage reaching destinations across Europe and beyond.'
-  }
+  { icon: PlaneIcon, titleKey: 'services.s1.title', textKey: 'services.s1.text' },
+  { icon: TruckIcon, titleKey: 'services.s2.title', textKey: 'services.s2.text' },
+  { icon: PackageIcon, titleKey: 'services.s3.title', textKey: 'services.s3.text' },
+  { icon: GlobeIcon, titleKey: 'services.s4.title', textKey: 'services.s4.text' }
 ]
 
 export default function Services() {
+  const { t } = useI18n()
+
   return (
     <section className="services" id="services">
       <div className="container">
         <header className="section-head">
-          <span className="section-head__eyebrow">Our services</span>
+          <span className="section-head__eyebrow">{t('services.eyebrow')}</span>
           <h2 className="section-head__title" id="network">
-            Delivery built for international reliability
+            {t('services.title')}
           </h2>
-          <p className="section-head__text">
-            From origin pickup in South Korea to final delivery in Finland, every shipment is handled
-            with the same care and visibility.
-          </p>
+          <p className="section-head__text">{t('services.text')}</p>
         </header>
 
         <div className="services__grid">
-          {SERVICES.map(({ icon: Icon, title, text }) => (
-            <article key={title} className="service-card">
+          {SERVICES.map(({ icon: Icon, titleKey, textKey }) => (
+            <article key={titleKey} className="service-card">
               <span className="service-card__icon" aria-hidden="true">
                 <Icon width="24" height="24" />
               </span>
-              <h3 className="service-card__title">{title}</h3>
-              <p className="service-card__text">{text}</p>
+              <h3 className="service-card__title">{t(titleKey)}</h3>
+              <p className="service-card__text">{t(textKey)}</p>
             </article>
           ))}
         </div>

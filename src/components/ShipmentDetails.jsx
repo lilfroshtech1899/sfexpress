@@ -1,5 +1,6 @@
 import StatusBadge from './StatusBadge.jsx'
 import { formatDate } from '../utils/tracking.js'
+import { useI18n } from '../i18n/LanguageContext.jsx'
 
 function Row({ label, children }) {
   return (
@@ -11,49 +12,49 @@ function Row({ label, children }) {
 }
 
 export default function ShipmentDetails({ shipment, view }) {
+  const { t, trPlace } = useI18n()
+
   return (
     <section className="card details" aria-labelledby="details-heading">
       <header className="card__head">
         <h3 className="card__title" id="details-heading">
-          Shipment details
+          {t('details.title')}
         </h3>
       </header>
 
       <dl className="details__grid">
-        <Row label="Tracking number">
+        <Row label={t('details.trackingNumber')}>
           <span className="mono">{shipment.trackingNumber}</span>
         </Row>
-        <Row label="Courier">
-          {shipment.courier}
+        <Row label={t('details.courier')}>{shipment.courier}</Row>
+
+        <Row label={t('details.sender')}>{shipment.sender}</Row>
+        <Row label={t('details.recipient')}>{shipment.recipient}</Row>
+
+        <Row label={t('details.origin')}>
+          {trPlace(shipment.originCity)}, {trPlace(shipment.originCountry)}
+        </Row>
+        <Row label={t('details.destination')}>
+          {trPlace(shipment.destinationCity)}, {trPlace(shipment.destinationCountry)}
         </Row>
 
-        <Row label="Sender">{shipment.sender}</Row>
-        <Row label="Recipient">{shipment.recipient}</Row>
-
-        <Row label="Origin">
-          {shipment.originCity}, {shipment.originCountry}
+        <Row label={t('details.product')}>
+          <span className="details__products">{t('product.summary')}</span>
         </Row>
-        <Row label="Destination">
-          {shipment.destinationCity}, {shipment.destinationCountry}
-        </Row>
+        <Row label={t('details.method')}>{t('method.express')}</Row>
 
-        <Row label="Product description">
-          <span className="details__products">{shipment.productSummary}</span>
-        </Row>
-        <Row label="Delivery method">{shipment.deliveryMethod}</Row>
+        <Row label={t('details.shippingDate')}>{formatDate(view.schedule.shippingDate)}</Row>
+        <Row label={t('details.estimated')}>{formatDate(view.schedule.expectedDeliveryDate)}</Row>
 
-        <Row label="Shipping date">{formatDate(view.schedule.shippingDate)}</Row>
-        <Row label="Estimated delivery">{formatDate(view.schedule.expectedDeliveryDate)}</Row>
-
-        <Row label="Current status">
+        <Row label={t('details.status')}>
           <StatusBadge tone={view.tone} label={view.statusLabel} size="sm" />
         </Row>
-        <Row label="Current location">{view.location}</Row>
+        <Row label={t('details.location')}>{view.location}</Row>
 
-        <Row label="Last status update">
+        <Row label={t('details.lastUpdate')}>
           <span>{view.lastUpdateLabel}</span>
         </Row>
-        <Row label="Service">{shipment.service}</Row>
+        <Row label={t('details.service')}>{t('service.intl')}</Row>
       </dl>
     </section>
   )

@@ -1,34 +1,35 @@
 import Logo from './Logo.jsx'
-import { PhoneIcon, MailIcon, GlobeIcon } from './Icons.jsx'
+import { MailIcon, GlobeIcon } from './Icons.jsx'
+import { useI18n } from '../i18n/LanguageContext.jsx'
 
 const COLUMNS = [
   {
-    title: 'Track',
-    links: ['Track a shipment', 'Track by reference', 'Delivery notifications', 'Proof of delivery']
+    titleKey: 'footer.col.track',
+    links: ['footer.l1', 'footer.l2', 'footer.l3', 'footer.l4']
   },
   {
-    title: 'Services',
-    links: ['International Express', 'Express Delivery', 'E-commerce Logistics', 'Warehousing']
+    titleKey: 'footer.col.services',
+    links: ['footer.l5', 'footer.l6', 'footer.l7', 'footer.l8']
   },
   {
-    title: 'Company',
-    links: ['About SF Express Korea', 'Global network', 'Careers', 'Newsroom']
+    titleKey: 'footer.col.company',
+    links: ['footer.l9', 'footer.l10', 'footer.l11', 'footer.l12']
   },
   {
-    title: 'Support',
-    links: ['Help centre', 'Prohibited items', 'Customs & duties', 'Contact us']
+    titleKey: 'footer.col.support',
+    links: ['footer.l13', 'footer.l14', 'footer.l15', 'footer.l16']
   }
 ]
 
 export default function Footer() {
+  const { t } = useI18n()
+
   return (
     <footer className="footer" id="support">
       <div className="container footer__grid">
         <div className="footer__brand">
           <Logo light />
-          <p className="footer__tagline">
-            Reliable international express delivery, connecting South Korea with the world.
-          </p>
+          <p className="footer__tagline">{t('footer.tagline')}</p>
           <ul className="footer__contact">
             <li>
               <MailIcon width="16" height="16" /> support@sf-express.kr
@@ -37,19 +38,19 @@ export default function Footer() {
               <MailIcon width="16" height="16" /> sfexpresskoreadeliverycompany1@gmail.com
             </li>
             <li>
-              <GlobeIcon width="16" height="16" /> Seoul, South Korea
+              <GlobeIcon width="16" height="16" /> {t('footer.seoul')}
             </li>
           </ul>
         </div>
 
         <nav className="footer__columns" aria-label="Footer">
           {COLUMNS.map((column) => (
-            <div key={column.title} className="footer__column">
-              <h4 className="footer__column-title">{column.title}</h4>
+            <div key={column.titleKey} className="footer__column">
+              <h4 className="footer__column-title">{t(column.titleKey)}</h4>
               <ul>
-                {column.links.map((link) => (
-                  <li key={link}>
-                    <a href="#track">{link}</a>
+                {column.links.map((linkKey) => (
+                  <li key={linkKey}>
+                    <a href="#track">{t(linkKey)}</a>
                   </li>
                 ))}
               </ul>
@@ -60,11 +61,11 @@ export default function Footer() {
 
       <div className="footer__bottom">
         <div className="container footer__bottom-inner">
-          <p>© {new Date().getFullYear()} SF Express Korea. Demonstration portal — not an official service.</p>
+          <p>{t('footer.bottom', { year: new Date().getFullYear() })}</p>
           <p className="footer__legal">
-            <a href="#track">Privacy</a>
-            <a href="#track">Terms</a>
-            <a href="#track">Cookies</a>
+            <a href="#track">{t('footer.privacy')}</a>
+            <a href="#track">{t('footer.terms')}</a>
+            <a href="#track">{t('footer.cookies')}</a>
           </p>
         </div>
       </div>

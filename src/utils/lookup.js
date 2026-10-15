@@ -21,21 +21,23 @@ export const INVALID_TRACKING_MESSAGE =
 
 /**
  * Resolve a tracking number to shipment data.
+ * @param {string} rawValue - user-typed tracking number
+ * @param {function} [t] - translation helper (key, vars) => string
  * @returns {{ ok: true, shipment: object } | { ok: false, reason: string }}
  */
-export function lookupTracking(rawValue) {
+export function lookupTracking(rawValue, t = (key) => key) {
   const value = normalizeTrackingNumber(rawValue)
 
   if (!value) {
-    return { ok: false, reason: 'Please enter a tracking number to track your shipment.' }
+    return { ok: false, reason: t('error.empty') }
   }
 
   if (value.length < 8) {
-    return { ok: false, reason: INVALID_TRACKING_MESSAGE }
+    return { ok: false, reason: t('error.invalid') }
   }
 
   if (value !== normalizeTrackingNumber(DEMO_TRACKING_NUMBER)) {
-    return { ok: false, reason: INVALID_TRACKING_MESSAGE }
+    return { ok: false, reason: t('error.invalid') }
   }
 
   return { ok: true, shipment }

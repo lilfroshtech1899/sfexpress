@@ -1,13 +1,16 @@
 import { STAGE_ICONS, CheckIcon } from './Icons.jsx'
 import { formatShortDate } from '../utils/tracking.js'
+import { useI18n } from '../i18n/LanguageContext.jsx'
 
 /**
  * Horizontal milestone rail (scrolls on small screens).
  * Green = completed, red = current, grey = pending.
  */
 export default function ProgressStepper({ stages }) {
+  const { t } = useI18n()
+
   return (
-    <div className="stepper-wrap" role="group" aria-label="Shipment milestone progress">
+    <div className="stepper-wrap" role="group" aria-label={t('stepper.aria')}>
       <ol className="stepper">
         {stages.map((stage, index) => {
           const Icon = STAGE_ICONS[stage.key] || CheckIcon
