@@ -110,7 +110,7 @@ export default {
   'footer.l14': '禁寄物品',
   'footer.l15': '清关与关税',
   'footer.l16': '联系我们',
-  'footer.bottom': '© {year} 顺丰韩国。演示门户 — 非官方服务。',
+  'footer.bottom': '© {year} 顺丰韩国。',
   'footer.privacy': '隐私',
   'footer.terms': '条款',
   'footer.cookies': 'Cookie',

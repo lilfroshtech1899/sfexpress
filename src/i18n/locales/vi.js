@@ -113,7 +113,7 @@ export default {
   'footer.l14': 'Hàng cấm',
   'footer.l15': 'Hải quan & thuế',
   'footer.l16': 'Liên hệ',
-  'footer.bottom': '© {year} SF Express Korea. Cổng thông tin minh họa — không phải dịch vụ chính thức.',
+  'footer.bottom': '© {year} SF Express Korea.',
   'footer.privacy': 'Quyền riêng tư',
   'footer.terms': 'Điều khoản',
   'footer.cookies': 'Cookie',

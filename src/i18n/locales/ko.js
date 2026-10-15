@@ -113,7 +113,7 @@ export default {
   'footer.l14': '금지 품목',
   'footer.l15': '통관 및 관세',
   'footer.l16': '문의하기',
-  'footer.bottom': '© {year} SF Express Korea. 데모 포털 — 공식 서비스가 아닙니다.',
+  'footer.bottom': '© {year} SF Express Korea.',
   'footer.privacy': '개인정보',
   'footer.terms': '약관',
   'footer.cookies': '쿠키',

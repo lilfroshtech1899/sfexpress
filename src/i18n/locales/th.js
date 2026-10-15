@@ -113,7 +113,7 @@ export default {
   'footer.l14': 'สิ่งของต้องห้าม',
   'footer.l15': 'ศุลกากรและภาษี',
   'footer.l16': 'ติดต่อเรา',
-  'footer.bottom': '© {year} SF Express Korea พอร์ทัลสาธิต — ไม่ใช่บริการอย่างเป็นทางการ',
+  'footer.bottom': '© {year} SF Express Korea.',
   'footer.privacy': 'ความเป็นส่วนตัว',
   'footer.terms': 'ข้อกำหนด',
   'footer.cookies': 'คุกกี้',

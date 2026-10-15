@@ -114,7 +114,7 @@ export default {
   'footer.l14': 'Articles interdits',
   'footer.l15': 'Douanes et taxes',
   'footer.l16': 'Nous contacter',
-  'footer.bottom': '© {year} SF Express Korea. Portail de démonstration — service non officiel.',
+  'footer.bottom': '© {year} SF Express Korea.',
   'footer.privacy': 'Confidentialité',
   'footer.terms': 'Conditions',
   'footer.cookies': 'Cookies',

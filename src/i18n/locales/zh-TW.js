@@ -110,7 +110,7 @@ export default {
   'footer.l14': '禁寄物品',
   'footer.l15': '清關與關稅',
   'footer.l16': '聯絡我們',
-  'footer.bottom': '© {year} 順豐韓國。示範入口網站 — 非官方服務。',
+  'footer.bottom': '© {year} 順豐韓國。',
   'footer.privacy': '隱私',
   'footer.terms': '條款',
   'footer.cookies': 'Cookie',
