@@ -7,19 +7,12 @@ import Timeline from './components/Timeline.jsx'
 import RouteMap from './components/RouteMap.jsx'
 import ShipmentDetails from './components/ShipmentDetails.jsx'
 import StatusBadge from './components/StatusBadge.jsx'
-import DemoControls from './components/DemoControls.jsx'
 import Services from './components/Services.jsx'
 import Footer from './components/Footer.jsx'
 
 import { lookupTracking } from './utils/lookup.js'
-import { getTrackingView, formatDate } from './utils/tracking.js'
+import { getTrackingView } from './utils/tracking.js'
 import { useI18n } from './i18n/LanguageContext.jsx'
-
-function toDateInputValue(date) {
-  const d = new Date(date)
-  const pad = (n) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
-}
 
 export default function App() {
   const { t } = useI18n()
@@ -27,9 +20,6 @@ export default function App() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [now, setNow] = useState(() => new Date())
-
-  const [liveMode, setLiveMode] = useState(true)
-  const [previewDate, setPreviewDate] = useState(() => toDateInputValue(new Date()))
 
   const resultsRef = useRef(null)
 
@@ -39,11 +29,9 @@ export default function App() {
     return () => window.clearInterval(id)
   }, [])
 
-  const referenceDate = liveMode ? now : new Date(`${previewDate}T12:00:00`)
-
   const view = useMemo(
-    () => (activeShipment ? getTrackingView(activeShipment, referenceDate, t) : null),
-    [activeShipment, referenceDate, t]
+    () => (activeShipment ? getTrackingView(activeShipment, now, t) : null),
+    [activeShipment, now, t]
   )
 
   const handleTrack = useCallback(
@@ -57,8 +45,6 @@ export default function App() {
 
         if (result.ok) {
           setActiveShipment(result.shipment)
-          setLiveMode(true)
-          setPreviewDate(toDateInputValue(new Date()))
           setError('')
           window.requestAnimationFrame(() => {
             resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -91,19 +77,6 @@ export default function App() {
                 <span className="results__eyebrow">{t('results.eyebrow')}</span>
                 <h2 className="results__title">{t('results.title')}</h2>
               </div>
-              <DemoControls
-                value={previewDate}
-                onChange={(value) => {
-                  setPreviewDate(value)
-                  setLiveMode(false)
-                }}
-                onReset={() => {
-                  setLiveMode(true)
-                  setPreviewDate(toDateInputValue(new Date()))
-                }}
-                isLive={liveMode}
-                liveLabel={formatDate(referenceDate)}
-              />
             </div>
 
             <ShipmentSummary shipment={activeShipment} view={view} />

@@ -118,13 +118,6 @@ export default {
   'footer.terms': '利用規約',
   'footer.cookies': 'Cookie',
 
-  'demo.live': 'ライブ状況 · {label}',
-  'demo.preview': 'プレビュー: {label}',
-  'demo.hint':
-    '状況は実際の現在日に基づいて算出されます。別の日付をプレビューするとスケジュールの算出結果を確認できます — 荷物データは変更されません。',
-  'demo.date': 'プレビュー日付',
-  'demo.today': '今日を使用',
-
   'error.empty': '荷物を追跡するには追跡番号を入力してください。',
   'error.invalid':
     'その追跡番号の荷物は見つかりませんでした。番号を確認して再度お試しください。追跡番号は SF1582947106205 のような形式です。',

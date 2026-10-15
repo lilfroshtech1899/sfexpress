@@ -118,13 +118,6 @@ export default {
   'footer.terms': '약관',
   'footer.cookies': '쿠키',
 
-  'demo.live': '실시간 상태 · {label}',
-  'demo.preview': '미리보기: {label}',
-  'demo.hint':
-    '상태는 실제 현재 날짜를 기준으로 산출됩니다. 다른 날짜를 미리보기하면 일정이 어떻게 계산되는지 확인할 수 있으며, 배송 데이터는 변경되지 않습니다.',
-  'demo.date': '미리보기 날짜',
-  'demo.today': '오늘 사용',
-
   'error.empty': '배송을 조회하려면 운송장 번호를 입력하세요.',
   'error.invalid':
     '해당 운송장 번호의 배송을 찾을 수 없습니다. 번호를 확인한 후 다시 시도하세요. 운송장 번호는 SF1582947106205 형식입니다.',

@@ -115,12 +115,6 @@ export default {
   'footer.terms': '條款',
   'footer.cookies': 'Cookie',
 
-  'demo.live': '即時狀態 · {label}',
-  'demo.preview': '預覽：{label}',
-  'demo.hint': '狀態根據真實目前日期產生。預覽其他日期可查看時間表的推算結果 — 不會更改貨件資料。',
-  'demo.date': '預覽日期',
-  'demo.today': '使用今天',
-
   'error.empty': '請輸入運單號以查詢您的貨件。',
   'error.invalid': '未找到與該運單號對應的貨件。請核對運單號後重試。運單號格式如 SF1582947106205。',
 

@@ -115,12 +115,6 @@ export default {
   'footer.terms': '条款',
   'footer.cookies': 'Cookie',
 
-  'demo.live': '实时状态 · {label}',
-  'demo.preview': '预览：{label}',
-  'demo.hint': '状态根据真实当前日期生成。预览其他日期可查看时间表的推算结果 — 不会更改快件数据。',
-  'demo.date': '预览日期',
-  'demo.today': '使用今天',
-
   'error.empty': '请输入运单号以查询您的快件。',
   'error.invalid': '未找到与该运单号对应的快件。请核对运单号后重试。运单号格式如 SF1582947106205。',
 

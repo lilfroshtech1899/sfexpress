@@ -606,11 +606,6 @@ ol {
   color: var(--ink-2);
 }
 
-.chip--demo {
-  background: var(--amber-soft);
-  color: var(--amber);
-}
-
 /* ==========================================================================
    Status badges
    ========================================================================== */
@@ -1270,124 +1265,6 @@ ol {
 
 .details__products {
   font-weight: 600;
-}
-
-/* ==========================================================================
-   Notice
-   ========================================================================== */
-.notice {
-  display: flex;
-  gap: 14px;
-  padding: 16px 18px;
-  margin-bottom: 20px;
-  background: #fffaf0;
-  border: 1px solid var(--amber-line);
-  border-radius: 16px;
-}
-
-.notice__icon {
-  flex: none;
-  margin-top: 2px;
-  color: var(--amber);
-}
-
-.notice__body strong {
-  display: block;
-  font-size: 14px;
-  color: #92400e;
-}
-
-.notice__body p {
-  margin-top: 5px;
-  font-size: 13.5px;
-  color: #7c5a17;
-}
-
-.notice__body em {
-  font-style: normal;
-  font-weight: 700;
-}
-
-/* ==========================================================================
-   Demo controls
-   ========================================================================== */
-.demo-controls {
-  position: relative;
-}
-
-.demo-controls__toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 14px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ink-2);
-  box-shadow: var(--shadow-sm);
-}
-
-.demo-controls__toggle:hover {
-  border-color: var(--red);
-  color: var(--red);
-}
-
-.demo-controls__chevron {
-  font-size: 9px;
-  color: var(--muted);
-}
-
-.demo-controls__panel {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 8px);
-  z-index: 20;
-  width: min(340px, 86vw);
-  padding: 16px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-}
-
-.demo-controls__hint {
-  margin-bottom: 12px;
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-.demo-controls__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.demo-controls__row label {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--ink-2);
-}
-
-.demo-controls__row input {
-  flex: 1;
-  min-width: 130px;
-  padding: 9px 11px;
-  font: inherit;
-  font-size: 13.5px;
-  color: var(--ink);
-  background: #f7f8fa;
-  border: 1.5px solid var(--line);
-  border-radius: 10px;
-}
-
-.demo-controls__row input:focus {
-  outline: none;
-  border-color: var(--red);
-  box-shadow: 0 0 0 3px var(--red-soft);
-  background: #fff;
 }
 
 /* ==========================================================================

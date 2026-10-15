@@ -119,13 +119,6 @@ export default {
   'footer.terms': 'Conditions',
   'footer.cookies': 'Cookies',
 
-  'demo.live': 'Statut en direct · {label}',
-  'demo.preview': 'Aperçu : {label}',
-  'demo.hint':
-    "Le statut est calculé à partir de la date actuelle réelle. Prévisualisez une autre date pour voir comment le calendrier se résout — cela ne modifie pas l'envoi.",
-  'demo.date': "Date d'aperçu",
-  'demo.today': "Utiliser aujourd'hui",
-
   'error.empty': 'Veuillez saisir un numéro de suivi pour suivre votre envoi.',
   'error.invalid':
     "Nous n'avons trouvé aucun envoi avec ce numéro de suivi. Vérifiez le numéro et réessayez. Les numéros de suivi ressemblent à SF1582947106205.",

@@ -119,13 +119,6 @@ export default {
   'footer.terms': 'Terms',
   'footer.cookies': 'Cookies',
 
-  'demo.live': 'Live status · {label}',
-  'demo.preview': 'Preview: {label}',
-  'demo.hint':
-    'Status is derived from the real current date. Preview another date to see how the schedule resolves — this does not alter the shipment.',
-  'demo.date': 'Preview date',
-  'demo.today': 'Use today',
-
   'error.empty': 'Please enter a tracking number to track your shipment.',
   'error.invalid':
     'We could not find a shipment with that tracking number. Please check the number and try again. Tracking numbers look like SF1582947106205.',

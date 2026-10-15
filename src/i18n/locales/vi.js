@@ -118,13 +118,6 @@ export default {
   'footer.terms': 'Điều khoản',
   'footer.cookies': 'Cookie',
 
-  'demo.live': 'Trạng thái trực tiếp · {label}',
-  'demo.preview': 'Xem trước: {label}',
-  'demo.hint':
-    'Trạng thái được tính từ ngày hiện tại thực tế. Xem trước ngày khác để biết lịch trình được tính như thế nào — không thay đổi dữ liệu vận đơn.',
-  'demo.date': 'Ngày xem trước',
-  'demo.today': 'Dùng hôm nay',
-
   'error.empty': 'Vui lòng nhập mã vận đơn để theo dõi.',
   'error.invalid':
     'Không tìm thấy vận đơn với mã này. Vui lòng kiểm tra và thử lại. Mã vận đơn có dạng SF1582947106205.',
